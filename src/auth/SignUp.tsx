@@ -20,8 +20,8 @@ function SignUp() {
       
     >
           <div className="flex justify-between max-w-4xl mx-auto">
-         <div className="hidden md:block  max-h-[40rem] flex-1/2 min-w-3/5 rounded-4xl
-          bg-[#020617] relative mt-9 " 
+         <div className="hidden md:block h-screen max-h-[40rem] flex-1/2 min-w-3/5 rounded-4xl
+          bg-[#020617] relative mt-9 ml-2.5 " 
           style={{
                 backgroundImage: `radial-gradient(circle 500px at 50% 100px, rgba(139,91,246,0.4), transparent)`,}}>
           <div>
@@ -56,7 +56,7 @@ function SignUp() {
                 </div>   
           </div>
           
-          <div className=" flex flex-col mt-10 md:mt-24 ml-8">
+          <div className=" flex flex-col flex-1 mt-10 md:mt-24 md:ml-8 w-full max-w-max mx-auto p-2">
            <div className="flex flex-col">
             <p className=" text-xl md:text-2xl font-bold text-center">Create Your Account </p>
             <p className="text-center">Enter Your Personal Data To Create Your Account</p>
