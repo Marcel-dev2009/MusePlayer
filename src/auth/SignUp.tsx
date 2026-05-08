@@ -13,15 +13,15 @@ function SignUp() {
   return (
     <>
     <main  
-     className='w-screen'
+     className='w-screen overflow-x-hidden overflow-y-hidden'
 /*      style={{
       background : "radial-gradient(125% 125% at 50% 100%, #000000 40%, #350136 100%)",
      }} */
       
     >
-          <div className="flex justify-between max-w-4xl mx-auto">
-         <div className="hidden md:block h-screen max-h-[40rem] flex-1/2 min-w-3/5 rounded-4xl
-          bg-[#020617] relative mt-9 ml-2.5 " 
+          <div className="flex justify-between max-w-4xl mx-auto px-8">
+         <div className="hidden md:block h-screen max-h-[40rem] flex-2 rounded-4xl w-full max-w-full min-w-[21rem]
+          bg-[#020617]  mt-5" 
           style={{
                 backgroundImage: `radial-gradient(circle 500px at 50% 100px, rgba(139,91,246,0.4), transparent)`,}}>
           <div>
@@ -33,7 +33,7 @@ function SignUp() {
              transition={{duration:2}}
               className="text-center font-bold text-2xl mt-12">Muse Streamer</motion.p>
           </div>
-               <div className="text-center mt-36">
+               <div className="text-center mt-36"> 
                  <h4 className="text-2xl font-bold"> Get Started With Us</h4>
                  <p>Complete these easy steps to register your account. </p>
                   
