@@ -2,25 +2,70 @@ import { useNavigate } from "react-router-dom"
 import  {motion} from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import axios from 'axios'
 import logo from "/Static-assets/logo.png"
+import { useState } from "react";
 import Input from "./AuthComponents/Input";
 import PageDivider from "./AuthComponents/PageDivider";
 function SignUp() {
+
   const navigate = useNavigate();
   const LoginNavigator = () => {
-    navigate('/SignIn')
+    navigate('/sign-in')
   }
+
+   const [firstname , setFirstName] = useState<string>("");
+   const [lastname , setLastName] = useState<string>("");
+   const [email , setEmail] = useState<string>("");
+   const [password , setPassword] = useState<string>("");
+   const [loading , setLoading] = useState<boolean>(false);
+   const [error , setError] = useState<string>("");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const validEmail = (email:string):boolean => {
+        return emailRegex.test(email)
+      }
+    async function signupHandler(e:React.FormEvent<HTMLFormElement>) {
+      e.preventDefault();
+      if(!email || !password){
+        setError("All fields are necessary");
+        return;
+      };
+      if(!validEmail(email)){
+        setError("Please Enter a valid email address");
+        return;
+      }
+      setError("");
+      setLoading(true);
+      try{
+       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/signup` , {
+        firstname,
+        lastname,
+        email,
+        password
+       });
+       console.log(res.data)
+       localStorage.setItem("token" , res.data.token);
+       navigate('/home')
+      }
+      catch(err){
+        console.log(err)
+      } 
+      finally{
+        setLoading(false);
+      }
+    }
+
   return (
     <>
     <main  
      className='w-screen overflow-x-hidden overflow-y-hidden'
-/*      style={{
+     style={{
       background : "radial-gradient(125% 125% at 50% 100%, #000000 40%, #350136 100%)",
-     }} */
+     }}
       
     >
-          <div className="flex justify-between max-w-4xl mx-auto px-8">
-         <div className="hidden md:block h-screen max-h-[40rem] flex-2 rounded-4xl w-full max-w-full min-w-[21rem]
+          <div className="flex justify-between max-w-4xl mx-auto px-4">
+         <div className="hidden md:block h-screen max-h-[40rem] flex-1 rounded-4xl w-full max-w-full min-w-[21rem]
           bg-[#020617]  mt-5" 
           style={{
                 backgroundImage: `radial-gradient(circle 500px at 50% 100px, rgba(139,91,246,0.4), transparent)`,}}>
@@ -56,7 +101,8 @@ function SignUp() {
                 </div>   
           </div>
           
-          <div className=" flex flex-col flex-1 mt-10 md:mt-24 md:ml-8 w-full max-w-max mx-auto p-2">
+         <form  onSubmit={signupHandler}>
+           <div className=" flex flex-col flex-1 mt-10 md:mt-24 md:ml-8 w-full max-w-max mx-auto p-2">
            <div className="flex flex-col">
             <p className=" text-xl md:text-2xl font-bold text-center">Create Your Account </p>
             <p className="text-center">Enter Your Personal Data To Create Your Account</p>
@@ -75,21 +121,35 @@ function SignUp() {
              </div> {/* OAuth Buttons */}
                 <PageDivider/>
               <div className="mt-4 flex flex-1 gap-2  md:gap-12">
-                   
-                  <Input type="text" placeholder=" e.g John"/>
-                  <Input type="text" placeholder=" e.g Frances"/>
+                 {/*   <input value={firstname} onChange={(e) => setFirstName(e.target.value)} type="text" placeholder="e.g John"   className="placeholder-gray-300  py-2 px-2 rounded-md  bg-gray-800
+        flex-1 w-full md:w-fit max-w-max
+         "/> 
+                   <input value={lastname} onChange={(e) => setLastName(e.target.value)} type="text" placeholder="e.g Frances"   className="placeholder-gray-300  py-2 px-2 rounded-md  bg-gray-800
+        flex-1 w-full md:w-fit max-w-max
+         "/>  */}
+                  <Input value={firstname} onChange={(e) => setFirstName(e.target.value)} type="text" placeholder=" e.g John"/>
+                  <Input value={lastname} onChange={(e) => setLastName(e.target.value)} type="text" placeholder=" e.g Frances"/>
               </div>
               <div>
                  <div className="mt-2">
-                     <label htmlFor="email" id="email" className="font-bold"> Email</label> 
-                 <input type="email" id="email" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-4 placeholder-gray-300" placeholder="eg.johnmarc@gmail.com"/> 
+                     <label htmlFor="email"  className="font-bold"> Email</label> 
+                 <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-4 placeholder-gray-300" placeholder="eg.johnmarc@gmail.com"/> 
                  <br /><br />
-                     <label htmlFor="password" id="password" className=" font-bold"> Password</label> 
-                 <input type="password" id="password" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-2 placeholder-gray-300" placeholder="Enter Your password"/> <br />
-                  {/* Error Handler over here */}
+                     <label htmlFor="password"  className=" font-bold"> Password</label> 
+                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="password" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-2 placeholder-gray-300" placeholder="Enter Your password"/> <br />
+                  {error && (
+                    <div className="text-sm text-red-600">
+                       {error} 
+                    </div>
+                  )}
                  </div>
                 <div className="mt-4">
-                   <button className=" font-semibold w-full py-2 rounded-md bg-white text-black  hover:bg-blue-800 transition duration-300">Sign Up</button>
+                   <button type="submit" className=" font-semibold w-full py-2 rounded-md bg-white text-black  hover:bg-blue-800 transition duration-300">
+                          {loading ? (
+                    <div className=" border-black border-1 w-5 h-5 rounded-full animate-ping mx-auto"></div>
+                  ) : "Sign Up"}
+                            
+                   </button>
                 </div>
                 <div>
                    <div className="text-sm text-center mt-5">
@@ -98,6 +158,7 @@ function SignUp() {
                 </div>
               </div>
            </div> 
+         </form>
              
       </div> {/* Main Container div */}
     </main>
