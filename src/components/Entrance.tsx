@@ -3,8 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
  import ArtistGrid from './ArtistGrid';
  import Logo from '../logo';
- import logo from '/Static-assets/logo.png';
-
+import PageShell from '../PageShell';
 function Entrance() {
    const navigate = useNavigate();
  const handleEnterApp = () => {
@@ -12,12 +11,10 @@ function Entrance() {
   }
    return(
     <>
-    <main className='overflow-x-hidden'>
+    <PageShell>
+       <main className=''>
        
-     <div className='mt-2 bg-transparent'>
-        <img src={logo} alt="Image" className='w-auto max-w-6 ml-2'/>
-    </div>
-
+   
      <div className='flex justify-center'>
             <Logo/>
       </div>
@@ -48,6 +45,7 @@ function Entrance() {
           </motion.button>
       </div>
     </main>
+    </PageShell>
     {/* <div
     
     >

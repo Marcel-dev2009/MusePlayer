@@ -1,4 +1,5 @@
   import { useEffect } from 'react';
+
  import AOS from 'aos';
   import 'aos/dist/aos.css';
 
@@ -14,6 +15,7 @@
     import justinBieber from '../assets/images/justin.jpeg';
     import wizkid from '../assets/images/Wizkid.jpeg';
     import nemmz from '../assets/images/nemzzz.jpeg';
+/* import PageShell from '../PageShell'; */
 
 const artist = [
   {
@@ -71,13 +73,14 @@ const ArtistGrid = () =>{
   }, []);
    return(
     <>
-
+   {/* <PageShell> */}
+    
      <div className=" flex items-center justify-center" data-aos='fade-in'>
        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"> {/* {"grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"} */}
        {artist.map((artist, index) => (
           <div
           key={index}
-          className='bg-[#111] p-4 rounded-2xl shadow-[0_0_20px_#000] hover:shadow-[0_0_25px_#0ff]
+          className='bg-[hsla(259,12%,27%,0)] p-4 rounded-2xl shadow-[0_0_20px_#000] hover:shadow-[0_0_25px_#0ff]
           transition-all duration-300 hover:scale-y-105'
           >
          <img src={artist.image} alt={artist.name} className='h-24 w-24 object-contain rounded-full mx-auto mb-2'/>
@@ -85,6 +88,7 @@ const ArtistGrid = () =>{
        ))}
        </div>
      </div> {/*  container end  */}
+   {/* </PageShell> */}
 
     </>
    )

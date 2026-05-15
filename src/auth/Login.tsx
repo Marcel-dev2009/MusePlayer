@@ -1,14 +1,52 @@
 import { useNavigate } from "react-router-dom";
 import  {motion} from "framer-motion";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import logo from "/Static-assets/logo.png"
+import axios from "axios";
 import PageDivider from "./AuthComponents/PageDivider";
 function Login() {
   const navigate = useNavigate();
  const AuthNavigator = () => {
    navigate('/auth')
  }
+ const [email  , setEmail] = useState<string>("");
+ const [password  , setPassword] = useState<string>("");
+ const [error  , setError] = useState<string>("");
+ const [loading , setLoading] = useState<boolean>(false);
+ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ const validEmail = (email:string):boolean => {
+  return emailRegex.test(email);
+ }
+   async function loginHandler(e:React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+     if(!email || !password){
+      setError("All fields are required !");
+      return;
+     }
+     if(!validEmail){
+      setError("Please Enter a Valid Email");
+      return;
+     }
+     setError("")
+    setLoading(true);
+    try{
+     const res = await  axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`,{
+      email,
+      password
+     });
+      console.log(res.data);
+      localStorage.setItem("muse_token" , res.data.token);
+      navigate("/profile-setup");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }catch(err:any){
+      setError(err.response.data.message || "Something Went Wrong")
+      console.log(err.response.data.message)
+    } finally{
+      setLoading(false);
+    }
+   }
   return (
     <>
     <main  
@@ -66,17 +104,32 @@ function Login() {
              </div> {/* OAuth Buttons */}
                 <PageDivider/>
               <div>
-                 <div className="mt-2">
-                     <label htmlFor="email" id="email" className="font-bold"> Email</label> 
-                 <input type="email" id="email" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-4 placeholder-gray-300" placeholder="eg.johnmarc@gmail.com"/> 
+                 <form onSubmit={loginHandler}>
+
+                  <div className="mt-2">
+                   <label htmlFor="email"  className="font-bold"> Email</label> 
+                 <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-4 placeholder-gray-300" placeholder="eg.johnmarc@gmail.com"/> 
                  <br /><br />
-                     <label htmlFor="password" id="password" className=" font-bold"> Password</label> 
-                 <input type="password" id="password" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-2 placeholder-gray-300" placeholder="Enter Your password"/> <br />
-                  {/* Error Handler over here */}
+                     <label htmlFor="password" className=" font-bold"> Password</label> 
+                 <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="password" className=" mt-4 w-full bg-gray-800 rounded-md py-2 px-2 placeholder-gray-300" placeholder="Enter Your password"/> <br />
+                 {error && (
+                    <div className="text-sm text-red-600">
+                       {error} 
+                    </div>
+                  )}
                  </div>
                 <div className="mt-4">
-                   <button className=" font-semibold w-full md:min-w-72 py-2 rounded-md bg-white text-black  hover:bg-blue-800 transition duration-300">Log In </button>
+                   <button type="submit" className=" font-semibold w-full md:min-w-72 py-2 rounded-md bg-white text-black  hover:bg-blue-800 transition duration-300">
+
+                      {loading ? (
+                    <div className=" border-black border-1 w-5 h-5 rounded-full animate-ping mx-auto"></div>
+                  ) : "Log In"}
+                        
+                   </button>
                 </div>
+                 </form>
+
+
                 <div>
                    <div className="text-sm text-center mt-5">
                     Don't Have an Account Yet? <button className=" hover:text-blue-800 transition duration-300 cursor-pointer font-bold"

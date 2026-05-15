@@ -17,8 +17,8 @@
 }
 body{
     font-family: var(--FONT-FAMILY);
-    background: radial-gradient(125% 125% at 50% 100%, #000000 45%, #1a0023 80%, #2b0040 100%);
-    background-attachment: fixed;
+/*     background: radial-gradient(125% 125% at 50% 100%, #000000 45%, #1a0023 80%, #2b0040 100%);
+    background-attachment: fixed; */
     font-weight: 200;
 }
 

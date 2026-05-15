@@ -1,8 +1,11 @@
+import PageShell from "../PageShell"
 function Home() {
   return (
-    <div>
-    <h1>Welcome to the Muse streamer</h1>
-    </div>
+    <PageShell>
+      <main>
+      <h1>Welcome</h1>    
+      </main>  
+    </PageShell>
   )
 }
 export default Home

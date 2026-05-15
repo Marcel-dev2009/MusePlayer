@@ -44,8 +44,8 @@ function SignUp() {
         password
        });
        console.log(res.data)
-       localStorage.setItem("token" , res.data.token);
-       navigate('/home')
+       localStorage.setItem("muse_token" , res.data.token);  
+       navigate('/profile-setup')
       }
       catch(err){
         console.log(err)
@@ -121,12 +121,7 @@ function SignUp() {
              </div> {/* OAuth Buttons */}
                 <PageDivider/>
               <div className="mt-4 flex flex-1 gap-2  md:gap-12">
-                 {/*   <input value={firstname} onChange={(e) => setFirstName(e.target.value)} type="text" placeholder="e.g John"   className="placeholder-gray-300  py-2 px-2 rounded-md  bg-gray-800
-        flex-1 w-full md:w-fit max-w-max
-         "/> 
-                   <input value={lastname} onChange={(e) => setLastName(e.target.value)} type="text" placeholder="e.g Frances"   className="placeholder-gray-300  py-2 px-2 rounded-md  bg-gray-800
-        flex-1 w-full md:w-fit max-w-max
-         "/>  */}
+            
                   <Input value={firstname} onChange={(e) => setFirstName(e.target.value)} type="text" placeholder=" e.g John"/>
                   <Input value={lastname} onChange={(e) => setLastName(e.target.value)} type="text" placeholder=" e.g Frances"/>
               </div>
