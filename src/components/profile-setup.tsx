@@ -1,13 +1,13 @@
 //#Fix the things you can first
-import { useEffect, useRef  , useState, type ChangeEvent } from "react";
+import { /* useEffect, */ useRef  , useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import PageShell from "../PageShell";
 import Logo from "../logo";
 import { GENRES } from "#lib/data";
 import { ARTISTS } from "#lib/data";
 import { STEPS } from "#lib/data";
-import logo from "/Static-assets/logo.png"
-import CtaButton from "./CtaButton";
+import logo from "/Static-assets/logo.png";
+import axios from "axios";
 const cx = (...classes: string[]) => classes.filter(Boolean).join(" ")
 function ProfileSetup() {
   const [step , setStep] = useState<number>(0);
@@ -28,18 +28,18 @@ function ProfileSetup() {
    const result = ev.target?.result;
    if(typeof result === "string"){
     setPhotoPreview(result);
-     localStorage.setItem("photo" , result);
+  /*    localStorage.setItem("photo" , result); */
    } 
   };
   reader.readAsDataURL(file);
 
  };
- useEffect(() => {
+/*  useEffect(() => {
   const savedPhoto = localStorage.getItem('photo');
   if(savedPhoto){
     setPhotoPreview(savedPhoto);
   }
- }, []);
+ }, []); */
 
  const toggleGenre = (id:string) => 
   setSelectedGenres((prev) => 
@@ -50,6 +50,24 @@ function ProfileSetup() {
 
    const canContinue = step === 0 ? true : 
    step === 1 ? selectedGenres.length >= 1: selectedArtists.length >= 1;
+   const handleSubmitProfile = async () => {
+   try{
+     const token = localStorage.getItem("muse_token");
+     await axios.patch(`${import.meta.env.VITE_API_URL}/api/auth/profile` , {
+      photoUrl : photoPreview || "",
+      genres : selectedGenres,
+      artists : selectedArtists,
+     },
+    {
+      headers : {
+        Authorization : `Bearer ${token}`,
+      }
+    });
+    setDone(true)
+   }catch(error){
+     console.error(error)
+   } 
+   }
    // done page
    if(done){
     return (
@@ -67,7 +85,7 @@ function ProfileSetup() {
           <p className="text-sm font-light text-slate-400/75 leading-relaxed">
             Your sharp profile is ready. Welcome to Muse Streamer.
           </p>
-          <CtaButton onClick={handleMainApp} disabled={false}> Open the App  <span className="animate-pulse"> → </span></CtaButton>
+          <button onClick={handleMainApp} disabled={false}> Open the App  <span className="animate-pulse"> → </span></button>
         </div>
         </main>
       </PageShell>
@@ -80,7 +98,7 @@ function ProfileSetup() {
       <main className="flex justify-center items-center mt-2">
 
         <div
-        className="relative z-10 w-full max-w-[480px] mx-4 flex flex-col rounded-3xl backdrop-blur-2xl overflow-hidden"
+        className=" w-fit max-w-xl min-w-[18rem] mt-8 mx-4 flex flex-1 flex-col rounded-3xl backdrop-blur-2xl overflow-hidden"
         style={{ background: "rgba(12,14,28,0.72)", border: "0.5px solid rgba(99,102,241,0.18)" }}
       >
 
@@ -91,7 +109,7 @@ function ProfileSetup() {
             <div className="text-xl leading-none" style={{ background:"linear-gradient(135deg,#818cf8,#a78bfa)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
                <img src={logo} alt="Muse-Streamer logo" className="max-w-4" />
             </div>
-            <span className="text-lg font-bold text-slate-200" style={{ fontFamily:"'Syne',sans-serif" }}>Muse Streamer</span>
+            <span className="text-[clamp(0.5rem , 1rem , 0rem)] font-bold text-slate-200">Muse Streamer</span>
           </div>
 
           {/* Step dots */}
@@ -123,10 +141,12 @@ function ProfileSetup() {
 
           {/* STEP 0 — Photo */}
           {step === 0 && (
-            <section eyebrow="Step 1 of 3" title="Set your look" sub="Add a photo so friends can find you. You can always change this later.">
+            <section>
+              <form>
               <div className="flex flex-col items-center gap-6">
                 {/* Upload circle */}
-                <div
+              
+                          <div
                   className="relative w-32 h-32 rounded-full flex items-center justify-center cursor-pointer overflow-hidden transition-colors duration-200 hover:border-violet-400/60"
                   style={{ border:"1.5px dashed rgba(99,102,241,0.35)", background:"rgba(30,32,60,0.5)" }}
                   onClick={() => fileRef.current?.click()}
@@ -139,7 +159,7 @@ function ProfileSetup() {
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                       </svg>
-                      <span className="text-[11px] text-violet-400/70" style={{ fontFamily:"'DM Sans',sans-serif" }}>Upload photo</span>
+                      <span className="text-[11px] text-violet-400/70">Upload photo</span>
                     </div>
                   )}
                   {/* Edit badge */}
@@ -152,35 +172,55 @@ function ProfileSetup() {
                   </div>
                   <input type="file" ref={fileRef} accept="image/*" className="hidden" onChange={handlePhoto} />
                 </div>
+                
 
                 {!photoPreview && (
                   <button type="submit"
                     className="bg-transparent border-none cursor-pointer text-[13px] text-slate-400/60 underline underline-offset-[3px] transition-colors hover:text-slate-300/80"
-                    style={{ fontFamily:"'DM Sans',sans-serif" }}
-                    onClick={() => setStep(1)}
+            
                   >
                     Skip for now
                   </button>
-                )}
+                ) /* : (
+                     <button type="submit"
+                    className="bg-transparent border-none cursor-pointer text-[clamp(10px,13px,14px)] text-slate-400/60 underline underline-offset-[3px] transition-colors hover:text-slate-300/80"
+                 
+                  >
+                    Save Profile
+                  </button>
+                ) */}
+               
               </div>
+             </form>
             </section>
           )}
+
+
+
+
+
+
           {/* STEP 1 — Genres */}
           {step === 1 && (
             <section>
+              <form> 
               <div className="flex flex-1  gap-2 justify-end mb-2">
                 <p className="text-sm"> Your own sound pallete</p>
                 <p className="text-sm">
                   {selectedGenres.length < 5 ? `${selectedGenres.length}/5 selected` : (
-                    <p className="text-sm text-red-600"> Your genre pallete is full !!</p>
+                    <span className="text-sm text-red-600"> Your genre pallete is full !!</span>
                   )}
                 </p>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+             {/*  */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {GENRES.map((g) => {
                   const sel = selectedGenres.includes(g.id);
                   return (
-                    <button type="submit"
+                    <>
+                    
+                  <div className="flex flex-col">
+                           <div
                       key={g.id}
                       onClick={() => toggleGenre(g.id)}
                       className={cx(
@@ -198,32 +238,50 @@ function ProfileSetup() {
                       <span className="text-lg leading-none">{g.icon}</span>
                       <span className="text-[13px] flex-1 font-semibold">{g.label}</span>
                       {sel && <span className="text-[11px] font-semibold text-violet-300">✓</span>}
-                    </button>
+                    </div>
+               
+                  </div>
+                      
+                 
+                    </>
                   );
                 })}
-              </div>
+                  {/* {selectedGenres.length === 5 && (
+                      
+                       <button type="submit"
+                    className="cursor-pointer  text-white underline underline-offset-[3px] transition-colors hover:text-slate-300/80"
+                    
+                  >
+                   <span className="text-[clamp(10px,13px,14px)]">Save Genres</span>
+                  </button>
+                     )} */}
+              </div> 
+              </form>
+              {/*  */}
             </section>
           )}
 
           {/* STEP 2 — Artists */}
           {step === 2 && (
-            <section /* eyebrow="Step 3 of 3" title="Artists you love" sub={`Follow up to 6 artists. ${selectedArtists.length}/6 selected. */>
+            <section /* eyebrow="Step 3 of 3" title="Artists you love" sub={`Follow up to 6 artists. ${selectedArtists.length}/6 selected. */>  
+               <form>
               <div className="flex flex-1 justify-end space-x-1.5 mb-2">
                 <p className="text-sm">Step 3 of 3</p>
                 <p className="text-sm">Artists You love   </p> 
                 <p className="text-sm">
                  {
-                   selectedArtists.length <= 5 ? `${selectedArtists.length}/6 selected` : (<p className="text-sm text-red-600">
+                   selectedArtists.length <= 5 ? `${selectedArtists.length}/6 selected` : (<span className="text-sm text-red-600">
                      You have selected maximum artists
-                   </p>)
+                   </span>)
                   }
                 </p>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        
+                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 {ARTISTS.map((a) => {
                   const sel = selectedArtists.includes(a.id);
                   return (
-                    <button
+                    <div
                       key={a.id}
                       onClick={() => toggleArtist(a.id)}
                       className={cx(
@@ -260,10 +318,19 @@ function ProfileSetup() {
                       {sel && (
                         <span className="absolute top-2 right-2.5 text-[11px] font-bold text-violet-300">✓</span>
                       )}
-                    </button>
+                    </div>
                   );
                 })}
+               {/*   {selectedArtists.length === 6 && (
+                      
+                       <button type="submit"
+                    className="cursor-pointer  text-white underline underline-offset-[3px] transition-colors hover:text-slate-300/80"
+                  >
+                   <span className="text-[clamp(10px,13px,14px)]">Save Artists</span>
+                  </button>
+                     )} */}
               </div>
+             </form>
             </section>
           )}
         </div>
@@ -274,14 +341,16 @@ function ProfileSetup() {
             disabled={step === 0}
             onClick={() => setStep((s) => s - 1)}
             className="bg-transparent border-none text-sm text-slate-400/50 transition-colors hover:text-violet-400/90 disabled:opacity-0 disabled:pointer-events-none cursor-pointer"
-            style={{ fontFamily:"'DM Sans',sans-serif" }}
+            
           >
             ← Back
           </button>
 
           <button    // #CtaShouts
             disabled={!canContinue}
-            onClick={() => { if (step < 2) setStep((s) => s + 1); else setDone(true); }}
+            onClick={() => {
+              if(step < 2) setStep((s) => s + 1); else handleSubmitProfile();
+            }}
           >
             {step === 2 ? "Let's go →" : "Continue →"}
           </button>

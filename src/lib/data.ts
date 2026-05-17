@@ -12,16 +12,16 @@ import wizkid from '../assets/images/Wizkid.jpeg';
 import nemmz from '../assets/images/nemzzz.jpeg'; 
 
 export const GENRES = [
-  { id: "hiphop", label: "Hip-Hop", icon: "🎤" },
+  { id: "rap", label: "Rap", icon: "🎤" },
   { id: "jazz", label: "Jazz", icon: "🎷" },
-  { id: "electronic", label: "Electronic", icon: "🎛️" },
-  { id: "rnb", label: "R&B / Soul", icon: "🎵" },
+  { id: "country", label: "Country", icon: "🎛️" },
+  { id: "rnb", label: "R&B", icon: "🎵" },
   { id: "rock", label: "Rock", icon: "🎸" },
-  { id: "classical", label: "Classical", icon: "🎻" },
+  { id: "blues", label: "Blues", icon: "🎻" },
   { id: "pop", label: "Pop", icon: "🌟" },
-  { id: "afrobeats", label: "Afrobeats", icon: "🥁" },
+  { id: "reagge", label: "reagge", icon: "🥁" },
   { id: "lofi", label: "Lo-Fi", icon: "☕" },
-  { id: "metal", label: "Metal", icon: "⚡" },
+  { id: "metal", label: "Love", icon: "❤️" },
   { id: "latin", label: "Latin", icon: "💃" },
   { id: "indie", label: "Indie", icon: "🌿" },
 ];
